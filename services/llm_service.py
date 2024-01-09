@@ -1,6 +1,5 @@
 from typing import List
 from langchain.llms import Ollama
-from langchain.embeddings import OllamaEmbeddings
 from langchain.chains import LLMChain
 from langchain.prompts import (
     ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate
@@ -8,8 +7,9 @@ from langchain.prompts import (
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.docstore.document import Document
-from backports import configparser
+from langchain_community.embeddings import OllamaEmbeddings
 from pymilvus import connections, db, CollectionSchema, FieldSchema, DataType, Collection, utility
+from backports import configparser
 
 from messsages.inbound_http_request import ChatRequest
 import json
@@ -22,7 +22,7 @@ class InternalLlmService:
         parser = configparser.ConfigParser()
         parser.read("config.conf")
         prompt = ChatPromptTemplate(
-            message = [
+            messages = [
                 SystemMessagePromptTemplate.from_template(
                     """You are a helpful assistant use {docs} in my system data. Find company information from id"""
                 ),
@@ -76,9 +76,3 @@ class InternalLlmService:
             "answer": result["text"],
             "question_vector": question_vector
         }
-            
-
-
-
-        
-        
